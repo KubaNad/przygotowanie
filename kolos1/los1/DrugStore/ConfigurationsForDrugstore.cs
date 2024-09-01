@@ -6,7 +6,7 @@ public static class ConfigurationsForDrugstore
     {
         
         
-        app.MapPost("/api/prescriptions/{id}", async (int id, IPrescriptionService service) =>
+        app.MapGet("/api/prescriptions/{id}", async (int id, IPrescriptionService service) =>
             // await service.GetPrescription(id) is Prescription prescription ? Results.Ok(prescription) : Results.NotFound());
             Results.Ok(await service.GetPrescription(id)));
         
