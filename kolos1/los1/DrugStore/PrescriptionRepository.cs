@@ -70,4 +70,40 @@ public class PrescriptionRepository : IPrescriptionRepository
         throw new ArgumentException();
         // throw new NotImplementedException();
     }
+
+    public async Task<Prescription> AdPrescriptionData(Prescription prescription, SqlConnection con )
+    {
+        string sql2 = "INSERT INTO Prescription (Date, DueDate, IdPatient, IdDoctor) " +
+                      "VALUES (@Date, @DueDate, @IdPatient, @IdDoctor)";
+        SqlCommand command2 = new SqlCommand(sql2, con);
+        command2.Parameters.AddWithValue("@Date", prescription.Date);
+        command2.Parameters.AddWithValue("@DueDate", prescription.DueDate);
+        command2.Parameters.AddWithValue("@IdPatient", prescription.IdPatient);
+        command2.Parameters.AddWithValue("@IdDoctor", prescription.IdDoctor);
+        command2.ExecuteNonQuery();
+        
+        
+        string sql3 = "SELECT IdPrescription, Date, DueDate, IdPatient, IdDoctor FROM Prescription " +
+                      "WHERE IdPrescription = (SELECT MAX(IdPrescription) FROM Prescription);";
+        SqlCommand command3 = new SqlCommand(sql3, con);
+        
+        using (SqlDataReader reader = await command3.ExecuteReaderAsync())
+        {
+            // await con.OpenAsync();
+            if (reader.Read())
+            {
+                return new Prescription()
+
+                {
+                    IdPrescription = reader.GetInt32(0),
+                    Date = reader.GetDateTime(1),
+                    DueDate = reader.GetDateTime(2),
+                    IdPatient = reader.GetInt32(3),
+                    IdDoctor = reader.GetInt32(4),
+                };
+            }
+        }
+
+        throw new ArgumentException();
+    }
 }

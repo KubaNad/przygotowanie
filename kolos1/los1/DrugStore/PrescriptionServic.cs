@@ -18,7 +18,17 @@ public class PrescriptionService : IPrescriptionService
     {
         using var con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
         await con.OpenAsync();
-        var prescriptions = await _repository.GetPrescriptionData(id, con);
-        return prescriptions;
+        var prescription = await _repository.GetPrescriptionData(id, con);
+        return prescription;
     }
+
+    public async Task<Prescription> AdPrescription(Prescription prescription)
+    {
+        using var con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+        await con.OpenAsync();
+        var res = await _repository.AdPrescriptionData(prescription, con);
+        return res;
+    }
+
+    
 }

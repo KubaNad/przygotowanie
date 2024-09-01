@@ -3,4 +3,6 @@
 public interface IPrescriptionService
 {
     Task<Prescription> GetPrescription(int id);
+
+    Task<Prescription> AdPrescription(Prescription prescription);
 }
